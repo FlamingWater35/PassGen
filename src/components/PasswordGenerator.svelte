@@ -7,8 +7,8 @@
   let copied = false;
 
   // Toggle State
-  let useCommonSpecial = true; // e.g. ! @ # $
-  let useUncommonSpecial = false; // e.g. [ ] { } - _ /
+  let useCommonSpecial = true;
+  let useUncommonSpecial = false;
 
   // Character Sets
   const charsAlphaNum =
@@ -50,7 +50,7 @@
 </script>
 
 <div
-  class="w-full max-w-md bg-gray-900 border border-gray-800 rounded-2xl shadow-2xl p-6 sm:p-8"
+  class="w-full max-w-lg bg-gray-900 border border-gray-800 rounded-2xl shadow-2xl p-6 sm:p-8"
 >
   <!-- Header -->
   <div class="text-center mb-8">
@@ -136,7 +136,7 @@
       <input
         id="length"
         type="range"
-        min="6"
+        min="8"
         max="32"
         bind:value={length}
         on:input={generatePassword}
