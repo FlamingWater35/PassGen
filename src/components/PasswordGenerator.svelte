@@ -84,7 +84,7 @@
 </script>
 
 <div
-  class="w-full max-w-lg bg-gray-900 border border-gray-800 rounded-2xl shadow-2xl p-6 sm:p-8"
+  class="w-full max-w-lg bg-gray-900 border border-gray-800 rounded-2xl shadow-2xl p-6 sm:p-8 transition-all duration-300"
 >
   <!-- Header -->
   <div class="text-center mb-8">
@@ -100,60 +100,63 @@
   <div class="mb-6">
     <button
       on:click={copyToClipboard}
-      class="w-full relative group min-h-16 rounded-xl border-2 transition-all duration-300 ease-out flex items-center justify-center overflow-hidden
+      class="w-full relative group h-20 rounded-xl border-2 transition-all duration-300 ease-out flex items-center justify-center overflow-hidden
       {copied
         ? 'border-green-500 bg-green-500/10 cursor-default'
         : 'border-gray-800 bg-gray-950 hover:border-gray-600 hover:shadow-lg hover:shadow-indigo-500/10 cursor-pointer active:scale-[0.98]'}"
       aria-label="Copy password to clipboard"
     >
-      {#if copied}
-        <!-- Copied State -->
+      <!-- Normal State (Password) -->
+      <div
+        class="w-full flex items-center justify-between px-6 transition-opacity duration-200 {copied
+          ? 'opacity-0'
+          : 'opacity-100'}"
+      >
+        <span
+          class="font-mono text-lg text-gray-200 break-all text-left mr-4 leading-tight"
+          >{password}</span
+        >
+
         <div
-          class="flex items-center gap-2 text-green-400 animate-in fade-in zoom-in duration-200"
+          class="text-gray-600 group-hover:text-indigo-400 transition-colors shrink-0"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
+            width="20"
+            height="20"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            stroke-width="3"
+            stroke-width="2"
             stroke-linecap="round"
             stroke-linejoin="round"
-            ><polyline points="20 6 9 17 4 12"></polyline></svg
+            ><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path
+              d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+            ></path></svg
           >
-          <span class="text-lg font-bold font-sans">Copied!</span>
         </div>
-      {:else}
-        <!-- Normal State -->
-        <div class="w-full flex items-center justify-between px-4 py-3">
-          <span class="font-mono text-lg text-gray-200 break-all text-left mr-3"
-            >{password}</span
-          >
+      </div>
 
-          <div
-            class="text-gray-600 group-hover:text-indigo-400 transition-colors"
-          >
-            <!-- Copy Icon -->
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              ><rect x="9" y="9" width="13" height="13" rx="2" ry="2"
-              ></rect><path
-                d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
-              ></path></svg
-            >
-          </div>
-        </div>
-      {/if}
+      <!-- Copied State (Overlay) -->
+      <div
+        class="absolute inset-0 flex items-center justify-center gap-2 text-green-400 transition-all duration-300 transform {copied
+          ? 'opacity-100 scale-100'
+          : 'opacity-0 scale-90 pointer-events-none'}"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="3"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          ><polyline points="20 6 9 17 4 12"></polyline></svg
+        >
+        <span class="text-lg font-bold font-sans">Copied!</span>
+      </div>
     </button>
   </div>
 
