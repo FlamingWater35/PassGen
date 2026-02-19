@@ -11,28 +11,62 @@
   let useUncommonSpecial = false;
 
   // Character Sets
-  const charsAlphaNum =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  const charsCommon = "!@#$%^&*?";
-  const charsUncommon = "()[]{}<>:;,.-_+=/|\\~\"'`";
+  const charsUpper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const charsLower = "abcdefghijklmnopqrstuvwxyz";
+  const charsNum = "0123456789";
+  const charsSym = "!@#$%^&*?";
+  const charsAmb = "()[]{}<>:;,.-_+=/|\\~\"'`";
 
-  // Generate password
-  function generatePassword() {
-    let charset = charsAlphaNum;
+  const getChar = (str) => str.charAt(Math.floor(Math.random() * str.length));
 
-    if (useCommonSpecial) charset += charsCommon;
-    if (useUncommonSpecial) charset += charsUncommon;
-
-    let newPassword = "";
-    for (let i = 0; i < length; i++) {
-      const randomIndex = Math.floor(Math.random() * charset.length);
-      newPassword += charset[randomIndex];
+  const shuffle = (arr) => {
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
     }
-    password = newPassword;
+    return arr;
+  };
+
+  function generatePassword() {
+    // 1. Define Pools
+    const poolAlphaNum = charsUpper + charsLower + charsNum;
+
+    // Middle pool depends on settings
+    let poolMiddle = poolAlphaNum;
+    if (useCommonSpecial) poolMiddle += charsSym;
+    if (useUncommonSpecial) poolMiddle += charsAmb;
+
+    // 2. Generate Start and End characters (Always Alphanumeric)
+    const startChar = getChar(poolAlphaNum);
+    const endChar = getChar(poolAlphaNum);
+
+    // 3. Build Mandatory Middle Characters
+    let middleChars = [];
+
+    middleChars.push(getChar(charsUpper));
+    middleChars.push(getChar(charsLower));
+    middleChars.push(getChar(charsNum));
+
+    if (useCommonSpecial) middleChars.push(getChar(charsSym));
+    if (useUncommonSpecial) middleChars.push(getChar(charsAmb));
+
+    // 4. Fill remaining middle length
+    const remainingCount = length - 2 - middleChars.length;
+
+    for (let i = 0; i < remainingCount; i++) {
+      middleChars.push(getChar(poolMiddle));
+    }
+
+    // 5. Shuffle the middle to mix mandatory chars with random ones
+    middleChars = shuffle(middleChars);
+
+    // 6. Assemble
+    password = startChar + middleChars.join("") + endChar;
+
     copied = false;
   }
 
-  // Gopy to clipboard
+  // Copy to clipboard
   async function copyToClipboard() {
     if (copied) return;
     try {
@@ -167,7 +201,7 @@
 
       <div class="h-px bg-gray-800 w-full"></div>
 
-      <!-- Toggle: Uncommon -->
+      <!-- Toggle: Ambiguous -->
       <label class="flex items-center justify-between cursor-pointer group">
         <div class="flex flex-col">
           <span class="text-gray-300 text-sm font-medium">Ambiguous</span>
